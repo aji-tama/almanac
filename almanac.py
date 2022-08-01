@@ -14,7 +14,8 @@ from sys import platform
 
 #####################################
 #initial setup
-w_year = 2046 #<= which year you want
+w_year = 2023 #<= which year you want
+legend_on = 0 #<= turn on/off legend
 #####################################
 
 start = time.time()
@@ -303,8 +304,8 @@ ax2.scatter(l_sunrise[1]+24,l_sunrise[0], marker=5, color=sun_color, zorder=5)
 print(l_sunrise)
 #axis setting
 ax1.set_xlim((17,32))
-ax1.set_ylim((str(w_year)+'/12/31',str(w_year)+'/01/01'))
-ax2.set_ylim((str(w_year+1)+'/01/01',str(w_year)+'/01/02'))
+ax1.set_ylim((datetime.strptime(str(w_year)+'/12/31','%Y/%m/%d'),datetime.strptime(str(w_year)+'/01/01','%Y/%m/%d')))
+ax2.set_ylim((datetime.strptime(str(w_year+1)+'/01/01','%Y/%m/%d'),datetime.strptime(str(w_year)+'/01/02','%Y/%m/%d')))
 
 ax1.yaxis.tick_left()
 ax1.yaxis.set_major_locator(matplotlib.dates.MonthLocator(bymonth=range(1,13), bymonthday=1, interval=1))
@@ -334,22 +335,23 @@ for axis in ['top','bottom','left','right']:
  
 for DM in [str(w_year)+'/02/01',str(w_year)+'/03/01',str(w_year)+'/04/01',str(w_year)+'/05/01',str(w_year)+'/06/01',\
            str(w_year)+'/07/01',str(w_year)+'/08/01',str(w_year)+'/09/01',str(w_year)+'/10/01',str(w_year)+'/11/01',str(w_year)+'/12/01']:
-    ax1.hlines(DM, 17, 24, colors='grey', linewidth=0.25, zorder=2)
-    ax2.hlines(DM, 24, 32, colors='grey', linewidth=0.25, zorder=2)
+    ax1.hlines(datetime.strptime(DM,'%Y/%m/%d'), 17, 24, colors='grey', linewidth=0.25, zorder=2)
+    ax2.hlines(datetime.strptime(DM,'%Y/%m/%d'), 24, 32, colors='grey', linewidth=0.25, zorder=2)
     for DT in [19,21,23]:
-        ax1.vlines(DT, str(datetime.strptime(DM,'%Y/%m/%d').date()+timedelta(days=1)),\
-                   str(datetime.strptime(DM,'%Y/%m/%d').date()-timedelta(days=1)), colors='grey', linewidth=0.25, zorder=2)
-        ax1.vlines(DT, str(w_year)+'/01/01',str(w_year)+'/01/03', colors='grey', linewidth=0.25, zorder=2)
-        ax1.vlines(DT, str(w_year)+'/12/29',str(w_year)+'/12/31', colors='grey', linewidth=0.25, zorder=2)
+        ax1.vlines(DT, datetime.strptime(DM,'%Y/%m/%d').date()+timedelta(days=1),\
+                   datetime.strptime(DM,'%Y/%m/%d').date()-timedelta(days=1), colors='grey', linewidth=0.25, zorder=2)
+        ax1.vlines(DT, datetime.strptime(str(w_year)+'/01/01','%Y/%m/%d'),datetime.strptime(str(w_year)+'/01/03','%Y/%m/%d'), colors='grey', linewidth=0.25, zorder=2)
+        ax1.vlines(DT, datetime.strptime(str(w_year)+'/12/29','%Y/%m/%d'),datetime.strptime(str(w_year)+'/12/31','%Y/%m/%d'), colors='grey', linewidth=0.25, zorder=2)
     for DT in [25,27,29,31]:
-        ax2.vlines(DT, str(datetime.strptime(DM,'%Y/%m/%d').date()+timedelta(days=1)),\
-                   str(datetime.strptime(DM,'%Y/%m/%d').date()-timedelta(days=1)), colors='grey', linewidth=0.25, zorder=2)
-        ax2.vlines(DT, str(w_year)+'/01/02',str(w_year)+'/01/04', colors='grey', linewidth=0.25, zorder=2)
-        ax2.vlines(DT, str(w_year)+'/12/30',str(w_year+1)+'/01/01', colors='grey', linewidth=0.25, zorder=2)
+        ax2.vlines(DT, datetime.strptime(DM,'%Y/%m/%d').date()+timedelta(days=1),\
+                   datetime.strptime(DM,'%Y/%m/%d').date()-timedelta(days=1), colors='grey', linewidth=0.25, zorder=2)
+        ax2.vlines(DT, datetime.strptime(str(w_year)+'/01/02','%Y/%m/%d'),datetime.strptime(str(w_year)+'/01/04','%Y/%m/%d'), colors='grey', linewidth=0.25, zorder=2)
+        ax2.vlines(DT, datetime.strptime(str(w_year)+'/12/30','%Y/%m/%d'),datetime.strptime(str(w_year+1)+'/01/01','%Y/%m/%d'), colors='grey', linewidth=0.25, zorder=2)
 
-ax1.legend([Asunrise2,Asunset1,Amercuryrise2,Amercuryset1,Avenusrise2,Avenusset1,Amarsrise2,Amarsset1,Ajupiterrise2,Ajupiterset1,Asaturnrise2,Asaturnset1],\
-           ['sunrise','sunset','mercuryrise','mercuryset','venusrise','venusset','marsrise','marsset','jupiterrise','jupiterset','saturnrise','saturnset'])
-ax2.legend([Amoonrise2,Amoonset1],['moonrise','moonset'])
+if legend_on == 1:
+    ax1.legend([Asunrise2,Asunset1,Amercuryrise2,Amercuryset1,Avenusrise2,Avenusset1,Amarsrise2,Amarsset1,Ajupiterrise2,Ajupiterset1,Asaturnrise2,Asaturnset1],\
+            ['sunrise','sunset','mercuryrise','mercuryset','venusrise','venusset','marsrise','marsset','jupiterrise','jupiterset','saturnrise','saturnset'])
+    ax2.legend([Amoonrise2,Amoonset1],['moonrise','moonset'])
 
 #Y-label
 month_lab_E = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC']
